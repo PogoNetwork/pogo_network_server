@@ -8,6 +8,7 @@
     "npm": ">=3.7"
   },
   "scripts": {
+    "init_dev_project": "/bin/bash git-hooks-versionned/deployHooks.sh development &&  npm i",
     "dev": "ENV_DEFINITION=development nodemon --watch app/ app/main.js",
     "test": "echo \"Error: no test specified\" && exit 0"
   },
