@@ -1,0 +1,33 @@
+{
+  "name": "pogo_network_server",
+  "version": "0.1.0",
+  "description": "poke go network back nodejs server",
+  "main": "app/main.js",
+  "engines" : { "node" : "5.8","npm" : ">=3.7"},
+  "scripts": {
+     "dev": "ENV_DEFINITION=development nodemon --watch app/ app/main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PogoNetwork/pogo_network_server.git"
+  },
+  "author": "bwinckell",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PogoNetwork/pogo_network_server/issues"
+  },
+  "homepage": "https://github.com/PogoNetwork/pogo_network_server#readme",
+  "dependencies": {
+    "express": "^4.14.0",
+    "express-session": "^1.14.0",
+    "passport": "^0.3.2",
+    "passport-google-oauth": "^1.0.0",
+    "pg": "^6.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^3.1.0",
+    "jest": "^13.2.3",
+    "nodemon": "^1.9.2"
+  }
+}
