@@ -3,9 +3,12 @@
   "version": "0.1.0",
   "description": "poke go network back nodejs server",
   "main": "app/main.js",
-  "engines" : { "node" : "5.8","npm" : ">=3.7"},
+  "engines": {
+    "node": "5.8",
+    "npm": ">=3.7"
+  },
   "scripts": {
-     "dev": "ENV_DEFINITION=development nodemon --watch app/ app/main.js",
+    "dev": "ENV_DEFINITION=development nodemon --watch app/ app/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -27,6 +30,8 @@
   },
   "devDependencies": {
     "eslint": "^3.1.0",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-react": "^5.2.2",
     "jest": "^13.2.3",
     "nodemon": "^1.9.2"
   }

@@ -23,7 +23,7 @@ echo -e "\nValidating JavaScript:\n"
 for file in ${files}; do
 
     if [[ "$file" != "src/libjs/Gruntfile.js" ]]; then
-        cat "$pathGitDir/$file" | node ./node_modules/eslint/bin/eslint.jseslint.js --stdin --quiet -c $pathGitDir/.eslint.rc
+        cat "$pathGitDir/$file" | node ./node_modules/eslint/bin/eslint.js --stdin --quiet -c $pathGitDir/.eslintrc
         if [[ "$?" = 0 ]]; then
             echo -e "\t\033[32mESLint Passed: $file\033[0m"
             echo -e "---------------------------------------------------------------------------------------------"
