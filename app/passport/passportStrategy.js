@@ -1,0 +1,52 @@
+/*globals module, require ,console, __dirname, User*/
+
+const googleStrategy = require('passport-google-oauth').OAuth2Strategy,
+    fs = require('fs'),
+    privateGoogleData = JSON.parse(fs.readFileSync(__dirname + '/../../client_secret_9135989910.json', 'utf8'));
+/**
+ * init google strategy for passport and set serialize / deserialize of user session
+ * @param passport
+ */
+function initPassportStrategy(passport) {
+// passport init google config
+    passport.use(
+        new googleStrategy({
+            clientID: privateGoogleData.web['client_id'],
+            clientSecret: privateGoogleData.web['client_secret'],
+            callbackURL: privateGoogleData.web['redirect_uris'][0]
+        },
+        function (accessToken, refreshToken, profile, done) {
+            console.log('profile Google', profile);
+            // here we save our user credentials like email etc...
+            //User.findOrCreate( { googleId: profile.id }, function ( err, user ) {
+            //    return cb( err, user );
+            //} );
+            return done(null, profile);
+        }
+    ));
+
+    passport.serializeUser(function (user, done) {
+        done(null, user);
+    });
+
+    passport.deserializeUser(function (user, done) {
+        done(null, user);
+    });
+
+}
+// route middleware to make sure a user is logged in
+function isLoggedIn(req, res, next) {
+
+    // if user is authenticated in the session, carry on
+    if (req.isAuthenticated()) {
+        return next();
+    }
+
+    // if they aren't redirect them to the home page
+    res.redirect('/');
+}
+
+module.exports = {
+    isLoggedIn: isLoggedIn,
+    init: initPassportStrategy
+};

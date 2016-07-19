@@ -1,17 +1,29 @@
-/*globals require ,console*/
-'use strict';
+/*globals require ,console,__dirname,User*/
 const fs = require('fs'),
     https = require('https'),
     app = require('express')(),
- // https://www.sitepoint.com/how-to-use-ssltls-with-node-js/
+    passport = require('passport'),
+    passportStrategy = require('./passport/passportStrategy'),
+// https://www.sitepoint.com/how-to-use-ssltls-with-node-js/
     options = {
-        key  : fs.readFileSync('./devKeys/server.key'),
-        cert : fs.readFileSync('./devKeys/server.crt')
+        key: fs.readFileSync('./devKeys/server.key'),
+        cert: fs.readFileSync('./devKeys/server.crt')
     };
+// init passport custom function for set google Oauth2 working
+passportStrategy.init(passport);
 
-app.get('/', function (req, res) {
-    res.send('Hello World!');
-});
+app.use(require('cookie-parser')());
+app.use(require('body-parser').json());
+app.use(require('body-parser').urlencoded({extended: true}));
+app.use(require('express-session')({secret: 'keyboard cat', resave: true, saveUninitialized: true}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+// set router express with some road for login
+require('./api/auth.google.js').initAuthGoogleRouter(app, passport, passportStrategy);
+
 
 https.createServer(options, app).listen(3000, function () {
     console.log('Started!');
