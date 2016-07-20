@@ -22,7 +22,7 @@ app.use(passport.session());
 
 
 // set router express with some road for login
-require('./api/auth.google.js').initAuthGoogleRouter(app, passport, passportStrategy);
+require('./api/auth.google.js').initAuthGoogleApi(app, passport, passportStrategy);
 
 
 https.createServer(options, app).listen(3000, function () {

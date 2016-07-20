@@ -1,7 +1,7 @@
 /*globals module, require ,console, __dirname, User*/
 
 module.exports = {
-    initAuthGoogleRouter: function initAuthGoogleRouter(app, passport, passportStrategy) {
+    initAuthGoogleApi: function initAuthGoogleApi(app, passport, passportStrategy) {
         app.get('/', function (req, res) {
             res.send('Hello World!');
         });
