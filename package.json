@@ -8,7 +8,7 @@
     "npm": ">=3.7"
   },
   "scripts": {
-    "init_dev_project": "cd git-hooks-versionned/ && /bin/bash deployHooks.sh development &&  npm i",
+    "init_dev_project": "cd git-hooks-versionned/ && /bin/bash deployHooks.sh development &&  cd  ../ && npm i && psql -U postgres -h localhost -a -f db/initPokemonGoNetwork.database.sql",
     "export_dump_db":"pg_dump -U postgres -h localhost pokemonGoNetwork -f ./db/pokemonGoNetwork.bak.sql",
     "import_dump_db":"cat ./db/pokemonGoNetwork.bak.sql | psql -h localhost -U postgres pokemonGoNetwork",
     "dev": "ENV_DEFINITION=development nodemon --watch app/ app/main.js",
