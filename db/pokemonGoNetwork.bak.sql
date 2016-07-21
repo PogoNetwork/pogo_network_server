@@ -10,13 +10,13 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 --
--- Name: trainers_network; Type: SCHEMA; Schema: -; Owner: pkm_trainer
+-- Name: trainers_network; Type: SCHEMA; Schema: -; Owner: postgres
 --
 
 CREATE SCHEMA trainers_network;
 
 
-ALTER SCHEMA trainers_network OWNER TO pkm_trainer;
+ALTER SCHEMA trainers_network OWNER TO postgres;
 
 --
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
@@ -39,7 +39,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: trainers; Type: TABLE; Schema: trainers_network; Owner: pkm_trainer; Tablespace: 
+-- Name: trainers; Type: TABLE; Schema: trainers_network; Owner: postgres; Tablespace: 
 --
 
 CREATE TABLE trainers (
@@ -47,14 +47,15 @@ CREATE TABLE trainers (
     google_id integer NOT NULL,
     display_name text NOT NULL,
     emails text,
-    user_profile_data json
+    user_profile_data json,
+    pseudo text
 );
 
 
-ALTER TABLE trainers_network.trainers OWNER TO pkm_trainer;
+ALTER TABLE trainers_network.trainers OWNER TO postgres;
 
 --
--- Name: trainers_id_seq; Type: SEQUENCE; Schema: trainers_network; Owner: pkm_trainer
+-- Name: trainers_id_seq; Type: SEQUENCE; Schema: trainers_network; Owner: postgres
 --
 
 CREATE SEQUENCE trainers_id_seq
@@ -65,39 +66,39 @@ CREATE SEQUENCE trainers_id_seq
     CACHE 1;
 
 
-ALTER TABLE trainers_network.trainers_id_seq OWNER TO pkm_trainer;
+ALTER TABLE trainers_network.trainers_id_seq OWNER TO postgres;
 
 --
--- Name: trainers_id_seq; Type: SEQUENCE OWNED BY; Schema: trainers_network; Owner: pkm_trainer
+-- Name: trainers_id_seq; Type: SEQUENCE OWNED BY; Schema: trainers_network; Owner: postgres
 --
 
 ALTER SEQUENCE trainers_id_seq OWNED BY trainers.id;
 
 
 --
--- Name: id; Type: DEFAULT; Schema: trainers_network; Owner: pkm_trainer
+-- Name: id; Type: DEFAULT; Schema: trainers_network; Owner: postgres
 --
 
 ALTER TABLE ONLY trainers ALTER COLUMN id SET DEFAULT nextval('trainers_id_seq'::regclass);
 
 
 --
--- Data for Name: trainers; Type: TABLE DATA; Schema: trainers_network; Owner: pkm_trainer
+-- Data for Name: trainers; Type: TABLE DATA; Schema: trainers_network; Owner: postgres
 --
 
-COPY trainers (id, google_id, display_name, emails, user_profile_data) FROM stdin;
+COPY trainers (id, google_id, display_name, emails, user_profile_data, pseudo) FROM stdin;
 \.
 
 
 --
--- Name: trainers_id_seq; Type: SEQUENCE SET; Schema: trainers_network; Owner: pkm_trainer
+-- Name: trainers_id_seq; Type: SEQUENCE SET; Schema: trainers_network; Owner: postgres
 --
 
 SELECT pg_catalog.setval('trainers_id_seq', 1, false);
 
 
 --
--- Name: primary key; Type: CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer; Tablespace: 
+-- Name: primary key; Type: CONSTRAINT; Schema: trainers_network; Owner: postgres; Tablespace: 
 --
 
 ALTER TABLE ONLY trainers
