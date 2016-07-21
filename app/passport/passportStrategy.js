@@ -14,13 +14,12 @@ function initPassportStrategy(passport) {
             clientID: privateGoogleData.web['client_id'],
             clientSecret: privateGoogleData.web['client_secret'],
             callbackURL: privateGoogleData.web['redirect_uris'][0]
+
         },
         function (accessToken, refreshToken, profile, done) {
             console.log('profile Google', profile);
             // here we save our user credentials like email etc...
-            //User.findOrCreate( { googleId: profile.id }, function ( err, user ) {
-            //    return cb( err, user );
-            //} );
+
             return done(null, profile);
         }
     ));
