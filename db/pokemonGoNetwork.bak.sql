@@ -79,7 +79,7 @@ ALTER SEQUENCE friends_id_seq OWNED BY friends.id;
 
 CREATE TABLE trainers (
     id integer NOT NULL,
-    google_id integer NOT NULL,
+    google_id numeric NOT NULL,
     display_name text NOT NULL,
     emails text,
     user_profile_data json
@@ -143,6 +143,7 @@ SELECT pg_catalog.setval('friends_id_seq', 1, false);
 --
 
 COPY trainers (id, google_id, display_name, emails, user_profile_data) FROM stdin;
+1	156894121110045560000	bozo	bwinckell@companeo.com	\N
 \.
 
 
@@ -150,7 +151,7 @@ COPY trainers (id, google_id, display_name, emails, user_profile_data) FROM stdi
 -- Name: trainers_id_seq; Type: SEQUENCE SET; Schema: trainers_network; Owner: pkm_trainer
 --
 
-SELECT pg_catalog.setval('trainers_id_seq', 1, false);
+SELECT pg_catalog.setval('trainers_id_seq', 1, true);
 
 
 --
