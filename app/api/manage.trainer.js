@@ -18,14 +18,14 @@ module.exports = {
 
         // app.post('/api/trainer', function (req, res) {
         app.post( '/trainer', function ( req, res ) {
-            const pool = new Pool( pgConfig );
-            console.log( req.body.user_profile_data );
-            pool.query( 'INSERT INTO trainers_network."trainers" (google_id,display_name,emails,user_profile_data) VALUES (\'' +
-                req.body.google_id + '\',\'' +
-                req.body.display_name + '\',\'' +
-                req.body.emails + '\',\'' +
-                req.body.user_profile_data
-                + '\');' )
+            const pool = new Pool( pgConfig ),
+                query = 'INSERT INTO trainers_network.trainers (google_id,display_name,emails,user_profile_data) VALUES (\'' +
+                    req.body.google_id + '\',\'' +
+                    req.body.display_name + '\',\'' +
+                    req.body.emails + '\',\' '+
+                    JSON.stringify(req.body.user_profile_data) +'\');';
+            console.log( query);
+            pool.query( query)
                 .then( function ( data ) {
                     res.send( data );
                 }, function ( err ) {
