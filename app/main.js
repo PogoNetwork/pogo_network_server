@@ -23,7 +23,7 @@ app.use( passport.session() );
 
 // must route under /api/ to be logged in to use
 // comment if you want to test api route without login
-// app.all( '/api/*', passportStrategy.isLoggedIn );
+app.all( '/api/*', passportStrategy.isLoggedIn );
 
 // set router express with some road for login
 require( './api/auth.google.js' ).initAuthGoogleApi( app, passport, passportStrategy );
