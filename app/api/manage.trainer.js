@@ -10,7 +10,7 @@ module.exports = {
 
         // app.post( '/api/trainer', that.create_user );
 
-        app.put( '/api/trainer/:id', that.edit_user_name );
+        app.put( '/api/trainer/:id', that.edit_user_name_and_team );
 
         app.delete( '/api/trainer/:id', that.delete_account );
     },
@@ -34,9 +34,9 @@ module.exports = {
                 JSON.stringify( profile ) + '\');';
         return pool.query( query );
     },
-    'edit_user_name': function ( req, res ) {
+    'edit_user_name_and_team': function ( req, res ) {
         const pool = new Pool( pgConfig ),
-            query = 'UPDATE trainers_network.trainers SET display_name=' + req.body.display_name + ';';
+            query = 'UPDATE trainers_network.trainers SET display_name=' + req.body.display_name + ', pogo_team_color='+req.body['pogo_team_color']+';';
         pool.query( query )
             .then( function ( data ) {
                 res.send( data );
