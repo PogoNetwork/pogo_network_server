@@ -83,7 +83,9 @@ CREATE TABLE trainers (
     display_name text NOT NULL,
     emails text,
     user_profile_data json,
-    account_deleted boolean DEFAULT false NOT NULL
+    account_deleted boolean DEFAULT false NOT NULL,
+    pogo_team_color text DEFAULT 'none'::text NOT NULL,
+    first_connection boolean DEFAULT true NOT NULL
 );
 
 
@@ -143,8 +145,8 @@ SELECT pg_catalog.setval('friends_id_seq', 1, false);
 -- Data for Name: trainers; Type: TABLE DATA; Schema: trainers_network; Owner: pkm_trainer
 --
 
-COPY trainers (id, google_id, display_name, emails, user_profile_data, account_deleted) FROM stdin;
-6	116371735781381729561	benjamin winckell	winckell.benjamin.isart@gmail.com	 {"id":"116371735781381729561","displayName":"benjamin winckell","name":{"familyName":"winckell","givenName":"benjamin"},"emails":[{"value":"winckell.benjamin.isart@gmail.com","type":"account"}],"photos":[{"value":"https://lh6.googleusercontent.com/-7nnxy5dLr0k/AAAAAAAAAAI/AAAAAAAAAIY/y9taEnTVf3M/photo.jpg?sz=50"}],"gender":"male","provider":"google","_raw":"{\\n \\"kind\\": \\"plus#person\\",\\n \\"etag\\": \\"\\\\\\"xw0en60W6-NurXn4VBU-CMjSPEw/U4bUCC_bXIb3o3NT5X9pT3nwIQQ\\\\\\"\\",\\n \\"gender\\": \\"male\\",\\n \\"emails\\": [\\n  {\\n   \\"value\\": \\"winckell.benjamin.isart@gmail.com\\",\\n   \\"type\\": \\"account\\"\\n  }\\n ],\\n \\"objectType\\": \\"person\\",\\n \\"id\\": \\"116371735781381729561\\",\\n \\"displayName\\": \\"benjamin winckell\\",\\n \\"name\\": {\\n  \\"familyName\\": \\"winckell\\",\\n  \\"givenName\\": \\"benjamin\\"\\n },\\n \\"url\\": \\"https://plus.google.com/116371735781381729561\\",\\n \\"image\\": {\\n  \\"url\\": \\"https://lh6.googleusercontent.com/-7nnxy5dLr0k/AAAAAAAAAAI/AAAAAAAAAIY/y9taEnTVf3M/photo.jpg?sz=50\\",\\n  \\"isDefault\\": false\\n },\\n \\"isPlusUser\\": true,\\n \\"language\\": \\"fr\\",\\n \\"circledByCount\\": 25,\\n \\"verified\\": false\\n}\\n","_json":{"kind":"plus#person","etag":"\\"xw0en60W6-NurXn4VBU-CMjSPEw/U4bUCC_bXIb3o3NT5X9pT3nwIQQ\\"","gender":"male","emails":[{"value":"winckell.benjamin.isart@gmail.com","type":"account"}],"objectType":"person","id":"116371735781381729561","displayName":"benjamin winckell","name":{"familyName":"winckell","givenName":"benjamin"},"url":"https://plus.google.com/116371735781381729561","image":{"url":"https://lh6.googleusercontent.com/-7nnxy5dLr0k/AAAAAAAAAAI/AAAAAAAAAIY/y9taEnTVf3M/photo.jpg?sz=50","isDefault":false},"isPlusUser":true,"language":"fr","circledByCount":25,"verified":false}}	f
+COPY trainers (id, google_id, display_name, emails, user_profile_data, account_deleted, pogo_team_color, first_connection) FROM stdin;
+15	116371735781381729561	benjamin winckell	winckell.benjamin.isart@gmail.com	 {"id":"116371735781381729561","displayName":"benjamin winckell","name":{"familyName":"winckell","givenName":"benjamin"},"emails":[{"value":"winckell.benjamin.isart@gmail.com","type":"account"}],"photos":[{"value":"https://lh6.googleusercontent.com/-7nnxy5dLr0k/AAAAAAAAAAI/AAAAAAAAAIY/y9taEnTVf3M/photo.jpg?sz=50"}],"gender":"male","provider":"google","_raw":"{\\n \\"kind\\": \\"plus#person\\",\\n \\"etag\\": \\"\\\\\\"xw0en60W6-NurXn4VBU-CMjSPEw/U4bUCC_bXIb3o3NT5X9pT3nwIQQ\\\\\\"\\",\\n \\"gender\\": \\"male\\",\\n \\"emails\\": [\\n  {\\n   \\"value\\": \\"winckell.benjamin.isart@gmail.com\\",\\n   \\"type\\": \\"account\\"\\n  }\\n ],\\n \\"objectType\\": \\"person\\",\\n \\"id\\": \\"116371735781381729561\\",\\n \\"displayName\\": \\"benjamin winckell\\",\\n \\"name\\": {\\n  \\"familyName\\": \\"winckell\\",\\n  \\"givenName\\": \\"benjamin\\"\\n },\\n \\"url\\": \\"https://plus.google.com/116371735781381729561\\",\\n \\"image\\": {\\n  \\"url\\": \\"https://lh6.googleusercontent.com/-7nnxy5dLr0k/AAAAAAAAAAI/AAAAAAAAAIY/y9taEnTVf3M/photo.jpg?sz=50\\",\\n  \\"isDefault\\": false\\n },\\n \\"isPlusUser\\": true,\\n \\"language\\": \\"fr\\",\\n \\"circledByCount\\": 25,\\n \\"verified\\": false\\n}\\n","_json":{"kind":"plus#person","etag":"\\"xw0en60W6-NurXn4VBU-CMjSPEw/U4bUCC_bXIb3o3NT5X9pT3nwIQQ\\"","gender":"male","emails":[{"value":"winckell.benjamin.isart@gmail.com","type":"account"}],"objectType":"person","id":"116371735781381729561","displayName":"benjamin winckell","name":{"familyName":"winckell","givenName":"benjamin"},"url":"https://plus.google.com/116371735781381729561","image":{"url":"https://lh6.googleusercontent.com/-7nnxy5dLr0k/AAAAAAAAAAI/AAAAAAAAAIY/y9taEnTVf3M/photo.jpg?sz=50","isDefault":false},"isPlusUser":true,"language":"fr","circledByCount":25,"verified":false}}	f	none	t
 \.
 
 
@@ -152,7 +154,7 @@ COPY trainers (id, google_id, display_name, emails, user_profile_data, account_d
 -- Name: trainers_id_seq; Type: SEQUENCE SET; Schema: trainers_network; Owner: pkm_trainer
 --
 
-SELECT pg_catalog.setval('trainers_id_seq', 6, true);
+SELECT pg_catalog.setval('trainers_id_seq', 15, true);
 
 
 --
