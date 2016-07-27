@@ -12,7 +12,7 @@ module.exports = {
         } ) );
 
         app.get( '/auth/google',
-            passport.authenticate( 'google', { scope: [ 'openid', 'email', 'profile' ] } ) );
+            passport.authenticate( 'google', { scope: [ 'email', 'profile' ] } ) );
 
         app.get( '/profile', passportStrategy.isLoggedIn, function ( req, res ) {
             res.send( 'Hello World MA GUEULE CONNECTé!' );

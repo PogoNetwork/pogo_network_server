@@ -13,16 +13,16 @@ function initPassportStrategy ( passport ) {
     passport.use( new googleStrategy( {
         clientID    : privateGoogleData.web[ 'client_id' ],
         clientSecret: privateGoogleData.web[ 'client_secret' ],
-        callbackURL : privateGoogleData.web[ 'redirect_uris' ][ 0 ]
+        callbackURL : privateGoogleData.web[ 'redirect_uris' ][ 0 ],
+        passReqToCallback   : true
     },
-    function ( accessToken, refreshToken, profile, done ) {
-        console.log( 'profile Google', profile );
+    function ( req, accessToken, refreshToken, profile, done ) {
+        // console.log( 'profile Google', profile );
         // here we save our user credentials like email etc...
         manageTrainer.get_user( profile ).then( function ( data ) {
-            if ( 0 >= data.rows.length ) {
-                manageTrainer.create_user( profile ).then( function () {
-                    return console.log( 'user created' );
-                } );
+            if ( 0 >= data.rows.length )
+            {
+                manageTrainer.create_user(req, profile );
             }
         } );
         return done( null, profile );
