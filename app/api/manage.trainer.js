@@ -4,7 +4,7 @@ const pg = require( 'pg' ),
     Pool = require( 'pg-pool' );
 
 module.exports = {
-    initUserApi                             : function initUserApi ( app, passportStrategy ) {
+    initUserApi                       : function initUserApi ( app, passportStrategy ) {
         const that = this;
         app.get( '/trainer/:id', function ( req, res ) {
             const pool = new Pool( pgConfig ),
@@ -23,20 +23,20 @@ module.exports = {
                 } );
         } );
 
-        // app.post( '/api/trainer', that.create_user );
+        app.put( '/trainer/:id', that.editUserNameAndTeamAndConnection );
 
-        app.put( '/trainer/:id', that.edit_user_name_and_team_and_connection );
+        app.delete( '/trainer/:id', that.deleteAccount );
 
-        app.delete( '/trainer/:id', that.delete_account );
+        app.post( '/trainer/add/:id', that.addFriendById );
 
         return app;
     },
-    'get_user'                              : function ( profile ) {
+    'get_user'                        : function ( profile ) {
         const pool = new Pool( pgConfig ),
             query = 'SELECT google_id FROM trainers_network.trainers WHERE google_id=' + profile.id + ';';
         return pool.query( query );
     },
-    'create_user'                           : function ( req, profile ) {
+    'create_user'                     : function ( req, profile ) {
         const pool = new Pool( pgConfig ),
             query = 'INSERT INTO trainers_network.trainers (google_id,display_name,emails,user_profile_data) VALUES (\'' +
                 profile.id + '\',\'' +
@@ -44,11 +44,11 @@ module.exports = {
                 profile.emails[ 0 ].value + '\',\' ' +
                 JSON.stringify( profile ) + '\') RETURNING *;';
         return pool.query( query ).then( function ( data2 ) {
-            req.session['first_connection']= data2.rows[ 0 ]['first_connection'];
-            console.log('create new user with google_id :', data2.rows[0]['google_id'], data2.rows[0]['display_name']);
+            req.session[ 'first_connection' ] = data2.rows[ 0 ][ 'first_connection' ];
+            console.log( 'create new user with google_id :', data2.rows[ 0 ][ 'google_id' ], data2.rows[ 0 ][ 'display_name' ] );
         } );
     },
-    'edit_user_name_and_team_and_connection': function ( req, res ) {
+    'editUserNameAndTeamAndConnection': function ( req, res ) {
         'use strict';
         const pool = new Pool( pgConfig );
         let query = 'UPDATE trainers_network.trainers SET ';
@@ -78,7 +78,7 @@ module.exports = {
                 res.send( err );
             } );
     },
-    'delete_account'                        : function ( req, res ) {
+    'deleteAccount'                   : function ( req, res ) {
         const pool = new Pool( pgConfig ),
             query = 'UPDATE trainers_network.trainers SET account_deleted= true;';
         pool.query( query )
@@ -88,6 +88,18 @@ module.exports = {
                 console.log( err );
                 res.send( err );
             } );
+    },
+    addFriendById                     : function ( req, res ) {
+        // const pool = new Pool( pgConfig ),
+        //     query = 'INSERT INTO trainers_network.friends (google_id,display_name,emails,user_profile_data) VALUES (\'' +
+        //         profile.id + '\',\'' +
+        //         profile.displayName + '\',\'' +
+        //         profile.emails[ 0 ].value + '\',\' ' +
+        //         JSON.stringify( profile ) + '\') RETURNING *;';
+        // return pool.query( query ).then( function ( data2 ) {
+        //     req.session[ 'first_connection' ] = data2.rows[ 0 ][ 'first_connection' ];
+        //     console.log( 'create new user with google_id :', data2.rows[ 0 ][ 'google_id' ], data2.rows[ 0 ][ 'display_name' ] );
+        // } );
     }
 };
 
