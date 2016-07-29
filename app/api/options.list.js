@@ -9,6 +9,9 @@ module.exports = {
         app.get( '/options/pogoTeams', function ( req, res ) {
             res.send( [ 'none', 'valor', 'mystic', 'instinct' ] );
         } );
+        app.get( '/options/friendRequestStatus', function ( req, res ) {
+            res.send( [ 'pending', 'accepted', 'refused' ] );
+        } );
         return app;
     }
 };
