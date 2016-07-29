@@ -28,6 +28,7 @@ app.all( '/api/*', passportStrategy.isLoggedIn );
 // set router express with some road for login
 require( './api/auth.google.js' ).initAuthGoogleApi( app, passport, passportStrategy );
 require( './api/manage.trainer.js' ).initUserApi( apiRouter, passportStrategy );
+require( './api/manage.friends.js' ).initFriendsApi( apiRouter, passportStrategy );
 require( './api/options.list.js' ).initListApi( apiRouter, passportStrategy );
 
 app.use( '/api/', apiRouter );
