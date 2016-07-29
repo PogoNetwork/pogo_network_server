@@ -31,21 +31,22 @@ module.exports = {
 
         return app;
     },
-    'get_user'                        : function ( profile ) {
+    getUser                           : function ( profile ) {
         const pool = new Pool( pgConfig ),
-            query = 'SELECT google_id FROM trainers_network.trainers WHERE google_id=' + profile.id + ';';
+            query = 'SELECT * FROM trainers_network.trainers WHERE google_id=' + profile.id + ';';
         return pool.query( query );
     },
-    'create_user'                     : function ( req, profile ) {
+    createUser                        : function ( req, profile ) {
         const pool = new Pool( pgConfig ),
             query = 'INSERT INTO trainers_network.trainers (google_id,display_name,emails,user_profile_data) VALUES (\'' +
                 profile.id + '\',\'' +
                 profile.displayName + '\',\'' +
                 profile.emails[ 0 ].value + '\',\' ' +
                 JSON.stringify( profile ) + '\') RETURNING *;';
-        return pool.query( query ).then( function ( data2 ) {
-            req.session[ 'first_connection' ] = data2.rows[ 0 ][ 'first_connection' ];
-            console.log( 'create new user with google_id :', data2.rows[ 0 ][ 'google_id' ], data2.rows[ 0 ][ 'display_name' ] );
+        return pool.query( query ).then( function ( data) {
+            req.session[ 'first_connection' ] = data.rows[ 0 ][ 'first_connection' ];
+            req.session.user = data.rows[ 0 ];
+            console.log( 'create new user with google_id :', data.rows[ 0 ][ 'google_id' ], data.rows[ 0 ][ 'display_name' ] );
         } );
     },
     'editUserNameAndTeamAndConnection': function ( req, res ) {
@@ -96,9 +97,9 @@ module.exports = {
         //         profile.displayName + '\',\'' +
         //         profile.emails[ 0 ].value + '\',\' ' +
         //         JSON.stringify( profile ) + '\') RETURNING *;';
-        // return pool.query( query ).then( function ( data2 ) {
-        //     req.session[ 'first_connection' ] = data2.rows[ 0 ][ 'first_connection' ];
-        //     console.log( 'create new user with google_id :', data2.rows[ 0 ][ 'google_id' ], data2.rows[ 0 ][ 'display_name' ] );
+        // return pool.query( query ).then( function ( data) {
+        //     req.session[ 'first_connection' ] = data.rows[ 0 ][ 'first_connection' ];
+        //     console.log( 'create new user with google_id :', data.rows[ 0 ][ 'google_id' ], data.rows[ 0 ][ 'display_name' ] );
         // } );
     }
 };
