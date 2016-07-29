@@ -23,7 +23,7 @@ function initPassportStrategy ( passport ) {
                 return manageTrainer.createUser( req, profile );
             }
             else {
-                console.log( 'titi' );
+                console.log( 'store current user to session' );
                 req.session.user = data.rows[ 0 ];
                 return ;
             }
