@@ -29,32 +29,36 @@ module.exports = {
         return app;
     },
     addFriendById : function ( req, res ) {
-        console.log( 'pouettee', req.session, res.session );
         const pool = new Pool( pgConfig ),
-            queryGetFriend = 'SELECT id_from AS friend FROM trainers_network.friends WHERE id_from = ' + req.session.passport.user[ 'id' ] + ' AND id_to= ' + req.params.id + ' UNION SELECT id_to AS friend FROM trainers_network.friends WHERE id_to = ' + req.session.passport.user[ 'id' ] + ' AND id_from= ' + req.params.id + ';',
+            queryGetFriend = 'SELECT * FROM trainers_network.friends WHERE id_from = ' + req.session.user[ 'id' ] + ' AND id_to= ' + req.params.id + ' UNION SELECT * FROM trainers_network.friends WHERE id_to = ' + req.session.user[ 'id' ] + ' AND id_from= ' + req.params.id + ';',
 
             query = 'INSERT INTO trainers_network.friends (id_from,id_to,accepted_at) VALUES (\'' +
                 req.session.user[ 'id' ] + '\',\'' +
                 req.params.id + '\',\'' +
                 req.body[ 'accepted_at' ] + '\') RETURNING *;';
-        console.log( 'try create add friend ' );
-        if ( req.session.passport.user[ 'id' ] !== req.param.id ) {
-            console.log( 'try query', query );
-            console.log( 'try GetFriend', queryGetFriend );
-            pool.query( queryGetFriend ).then( function ( data ) {
-                if ( 0 >= data.rows.length ) {
-                    return pool.query( query );
-                }
-                else {
-                    return this;
-                }
-            } ).then( function ( data ) {
-                console.log( 'promise here ', data );
-                if ( 0 >= data.rows.length ) {
-                    res.status( 200 ).send( 'request send!' );
-                }
-            } );
-
+        console.log( 'try create add friend ', req.session.user[ 'id' ] !== req.params.id, typeof req.params.id, typeof req.session.user[ 'id' ] );
+        if ( req.session.user[ 'id' ] !== parseInt( req.params.id, 10 ) ) {
+            // console.log( 'try GetFriend', queryGetFriend );
+            // console.log( 'try query', query );
+            pool.query( queryGetFriend )
+                .then( function ( data ) {
+                    if ( 0 === data.rowCount ) {
+                        return pool.query( query );
+                    }
+                    else {
+                        return data;
+                    }
+                } )
+                .then( function ( data ) {
+                    if ( 0 < data.rowCount ) {
+                        res.status( 200 ).send( {
+                            message      : 'friend request status',
+                            'is_accepted': data.rows[ 0 ][ 'is_accepted' ]
+                        } );
+                    }
+                }, function ( err ) {
+                    res.status( 203 ).send( err );
+                } );
         }
         else {
             res.status( 203 ).send( 'don\'t try to add yourself' );
