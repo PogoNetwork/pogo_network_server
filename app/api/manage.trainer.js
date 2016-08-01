@@ -1,6 +1,7 @@
 /*globals module, require ,console, __dirname, User*/
 const pg = require( 'pg' ),
     pgConfig = require( '../config/pgConfig.js' ),
+    optionsLists = require( './options.list.js' ),
     Pool = require( 'pg-pool' );
 
 module.exports = {
@@ -60,7 +61,9 @@ module.exports = {
             if ( req.body[ 'display_name' ] ) {
                 query += ',';
             }
-            query += ' pogo_team_color=\'' + req.body[ 'pogo_team_color' ] + '\'';
+            if ( optionsLists.pogoTeamList().includes( req.body[ 'pogo_team_color' ] ) ) {
+                query += ' pogo_team_color=\'' + req.body[ 'pogo_team_color' ] + '\'';
+            }
         }
         if ( undefined !== req.body[ 'first_connection' ] ) {
             if ( req.body[ 'pogo_team_color' ] || req.body[ 'display_name' ] ) {
