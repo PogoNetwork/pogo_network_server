@@ -6,9 +6,9 @@ const pg = require( 'pg' ),
 module.exports = {
     initUserApi                       : function initUserApi ( app, passportStrategy ) {
         const that = this;
-        app.get( '/trainer/:id', function ( req, res ) {
+        app.get( '/trainer', function ( req, res ) {
             const pool = new Pool( pgConfig ),
-                query = 'SELECT * FROM trainers_network.trainers WHERE google_id=' + req.params.id + ';';
+                query = 'SELECT * FROM trainers_network.trainers WHERE google_id=' + req.session.user.id + ';';
             pool.query( query )
                 .then( function ( data ) {
                     if ( 0 >= data.rows.length ) {
