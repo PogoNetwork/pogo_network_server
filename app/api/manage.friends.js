@@ -1,6 +1,7 @@
 /*globals module, require ,console, __dirname, User*/
 const pg = require( 'pg' ),
     pgConfig = require( '../config/pgConfig.js' ),
+    optionsLists = require( './options.list.js' ),
     Pool = require( 'pg-pool' );
 
 module.exports = {
