@@ -43,6 +43,7 @@ module.exports = {
         } );
 
         app.post( '/friends/:id', that.addFriendById );
+        app.put( '/friends/:id', that.updateFriendshipStatus );
         // app.delete( '/friends/:id', that.removeFriendById );
 
         return app;
@@ -81,6 +82,38 @@ module.exports = {
         }
         else {
             res.status( 203 ).send( 'don\'t try to add yourself' );
+        }
+    },
+    updateFriendshipStatus: function ( req, res ) {
+        const pool = new Pool( pgConfig ),
+            query = 'UPDATE trainers_network.friends SET is_accepted= \'' +
+                req.body[ 'is_accepted' ] +
+                '\' WHERE id_from = ' +
+                req.session.user[ 'id' ] +
+                ' AND id_to = ' +
+                req.params.id +
+                ' OR id_to = ' +
+                req.session.user[ 'id' ] +
+                ' AND id_from = ' +
+                req.params.id + ' RETURNING *;';
+
+        if ( optionsLists.friendRequestStatusList().includes( req.body[ 'is_accepted' ] ) ) {
+            pool.query( query )
+                .then( function ( data ) {
+                    console.log( 'update friend request status' );
+                    if ( 0 >= data.rowCount ) {
+                        res.status( 203 ).send( 'friend request not found' );
+                    }
+                    else {
+                        res.send( data );
+                    }
+                }, function ( err ) {
+                    console.log( err );
+                    res.send( err );
+                } );
+        }
+        else {
+            res.status( 403 ).send( ' bad param is_accepted option given to the request' );
         }
     }
 };
