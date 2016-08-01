@@ -5,7 +5,7 @@ const pg = require( 'pg' ),
     Pool = require( 'pg-pool' );
 
 module.exports = {
-    initUserApi                       : function initUserApi ( app, passportStrategy ) {
+    initUserApi                     : function initUserApi ( app, passportStrategy ) {
         const that = this;
         app.get( '/trainer', function ( req, res ) {
             const pool = new Pool( pgConfig ),
@@ -32,25 +32,25 @@ module.exports = {
 
         return app;
     },
-    getUser                           : function ( profile ) {
+    getUser                         : function ( profile ) {
         const pool = new Pool( pgConfig ),
             query = 'SELECT * FROM trainers_network.trainers WHERE google_id=' + profile.id + ';';
         return pool.query( query );
     },
-    createUser                        : function ( req, profile ) {
+    createUser                      : function ( req, profile ) {
         const pool = new Pool( pgConfig ),
             query = 'INSERT INTO trainers_network.trainers (google_id,display_name,emails,user_profile_data) VALUES (\'' +
                 profile.id + '\',\'' +
                 profile.displayName + '\',\'' +
                 profile.emails[ 0 ].value + '\',\' ' +
                 JSON.stringify( profile ) + '\') RETURNING *;';
-        return pool.query( query ).then( function ( data) {
+        return pool.query( query ).then( function ( data ) {
             req.session[ 'first_connection' ] = data.rows[ 0 ][ 'first_connection' ];
             req.session.user = data.rows[ 0 ];
             console.log( 'create new user with google_id :', data.rows[ 0 ][ 'google_id' ], data.rows[ 0 ][ 'display_name' ] );
         } );
     },
-    'editUserNameAndTeamAndConnection': function ( req, res ) {
+    editUserNameAndTeamAndConnection: function ( req, res ) {
         'use strict';
         const pool = new Pool( pgConfig );
         let query = 'UPDATE trainers_network.trainers SET ';
@@ -82,7 +82,7 @@ module.exports = {
                 res.send( err );
             } );
     },
-    'deleteAccount'                   : function ( req, res ) {
+    deleteAccount                   : function ( req, res ) {
         const pool = new Pool( pgConfig ),
             query = 'UPDATE trainers_network.trainers SET account_deleted= true;';
         pool.query( query )
@@ -93,7 +93,7 @@ module.exports = {
                 res.send( err );
             } );
     },
-    addFriendById                     : function ( req, res ) {
+    addFriendById                   : function ( req, res ) {
         // const pool = new Pool( pgConfig ),
         //     query = 'INSERT INTO trainers_network.friends (google_id,display_name,emails,user_profile_data) VALUES (\'' +
         //         profile.id + '\',\'' +
