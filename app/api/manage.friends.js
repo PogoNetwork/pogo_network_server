@@ -5,15 +5,33 @@ const pg = require( 'pg' ),
     Pool = require( 'pg-pool' );
 
 module.exports = {
-    initFriendsApi: function initUserApi ( app, passportStrategy ) {
+    initFriendsApi        : function initUserApi ( app, passportStrategy ) {
         const that = this;
-        app.get( '/friends', function ( req, res ) {
-            const pool = new Pool( pgConfig ),
-                query = 'SELECT id_from AS friend FROM trainers_network.friends WHERE id_from = ' + req.session.passport.user[ 'id' ] + ' UNION SELECT id_to AS friend FROM trainers_network.friends WHERE id_to = ' + req.session.passport.user[ 'id' ] + ';';
+        app.get( '/friends/:friendID?', function ( req, res ) {
+            'use strict';
+            const pool = new Pool( pgConfig );
+            let query;
+            if ( !req.params.friendID ) {
+                query = ' SELECT * FROM trainers_network.trainers WHERE id=(SELECT id_to AS friend FROM trainers_network.friends WHERE id_from = ' +
+                    req.session.user[ 'id' ] +
+                    ' UNION SELECT id_from AS friend FROM trainers_network.friends WHERE id_to = ' +
+                    req.session.user[ 'id' ] + ');';
+            }
+            else {
+                query = 'SELECT * FROM trainers_network.trainers WHERE id=(SELECT id_to AS friend FROM trainers_network.friends WHERE id_from = ' +
+                    req.session.user[ 'id' ] +
+                    ' AND id_to = ' +
+                    req.params.friendID +
+                    ' UNION SELECT id_from AS friend FROM trainers_network.friends WHERE id_to = ' +
+                    req.session.user[ 'id' ] +
+                    ' AND id_from = ' +
+                    req.params.friendID + ' );';
+            }
             pool.query( query )
                 .then( function ( data ) {
-                    if ( 0 >= data.rows.length ) {
-                        res.status( 204 );
+                    console.log( 'get friends' );
+                    if ( 0 >= data.rowCount ) {
+                        res.status( 204 ).send();
                     }
                     else {
                         res.send( data.rows );
