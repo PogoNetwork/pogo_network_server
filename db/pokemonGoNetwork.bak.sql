@@ -131,8 +131,8 @@ ALTER TABLE ONLY trainers ALTER COLUMN id SET DEFAULT nextval('trainers_id_seq':
 -- Data for Name: friends; Type: TABLE DATA; Schema: trainers_network; Owner: pkm_trainer
 --
 
-COPY friends (id_from, id_to, id, is_accepted, accepted_at) FROM stdin;
-44	43	46	accepted	2014-06-01 14:00:00+02
+COPY friends (id, id_from, id_to, is_accepted, accepted_at) FROM stdin;
+48	44	43	pending	2016-08-02 01:24:05.089149+02
 \.
 
 
@@ -140,7 +140,7 @@ COPY friends (id_from, id_to, id, is_accepted, accepted_at) FROM stdin;
 -- Name: friends_id_seq; Type: SEQUENCE SET; Schema: trainers_network; Owner: pkm_trainer
 --
 
-SELECT pg_catalog.setval('friends_id_seq', 46, true);
+SELECT pg_catalog.setval('friends_id_seq', 48, true);
 
 
 --
