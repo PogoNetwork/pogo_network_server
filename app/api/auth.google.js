@@ -5,6 +5,9 @@ module.exports = {
         app.get( '/', function ( req, res ) {
             res.send( 'Hello World!' );
         } );
+        app.get( '/logout', function ( req, res ) {
+            req.logout();
+        } );
 
         app.get( '/auth/google/callback', passport.authenticate( 'google', {
             failureRedirect: '/',

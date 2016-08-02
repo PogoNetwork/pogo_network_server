@@ -1,14 +1,15 @@
 /*globals module, require ,console, __dirname, User*/
 const pg = require( 'pg' ),
     pgConfig = require( '../config/pgConfig.js' ),
+    optionsLists = require( './options.list.js' ),
     Pool = require( 'pg-pool' );
 
 module.exports = {
-    initUserApi                       : function initUserApi ( app, passportStrategy ) {
+    initUserApi                     : function initUserApi ( app, passportStrategy ) {
         const that = this;
-        app.get( '/trainer/:id', function ( req, res ) {
+        app.get( '/trainer', function ( req, res ) {
             const pool = new Pool( pgConfig ),
-                query = 'SELECT * FROM trainers_network.trainers WHERE google_id=' + req.params.id + ';';
+                query = 'SELECT * FROM trainers_network.trainers WHERE google_id=' + req.session.user.id + ';';
             pool.query( query )
                 .then( function ( data ) {
                     if ( 0 >= data.rows.length ) {
@@ -31,24 +32,25 @@ module.exports = {
 
         return app;
     },
-    'get_user'                        : function ( profile ) {
+    getUser                         : function ( profile ) {
         const pool = new Pool( pgConfig ),
-            query = 'SELECT google_id FROM trainers_network.trainers WHERE google_id=' + profile.id + ';';
+            query = 'SELECT * FROM trainers_network.trainers WHERE google_id=' + profile.id + ';';
         return pool.query( query );
     },
-    'create_user'                     : function ( req, profile ) {
+    createUser                      : function ( req, profile ) {
         const pool = new Pool( pgConfig ),
             query = 'INSERT INTO trainers_network.trainers (google_id,display_name,emails,user_profile_data) VALUES (\'' +
                 profile.id + '\',\'' +
                 profile.displayName + '\',\'' +
                 profile.emails[ 0 ].value + '\',\' ' +
                 JSON.stringify( profile ) + '\') RETURNING *;';
-        return pool.query( query ).then( function ( data2 ) {
-            req.session[ 'first_connection' ] = data2.rows[ 0 ][ 'first_connection' ];
-            console.log( 'create new user with google_id :', data2.rows[ 0 ][ 'google_id' ], data2.rows[ 0 ][ 'display_name' ] );
+        return pool.query( query ).then( function ( data ) {
+            req.session[ 'first_connection' ] = data.rows[ 0 ][ 'first_connection' ];
+            req.session.user = data.rows[ 0 ];
+            console.log( 'create new user with google_id :', data.rows[ 0 ][ 'google_id' ], data.rows[ 0 ][ 'display_name' ] );
         } );
     },
-    'editUserNameAndTeamAndConnection': function ( req, res ) {
+    editUserNameAndTeamAndConnection: function ( req, res ) {
         'use strict';
         const pool = new Pool( pgConfig );
         let query = 'UPDATE trainers_network.trainers SET ';
@@ -59,7 +61,9 @@ module.exports = {
             if ( req.body[ 'display_name' ] ) {
                 query += ',';
             }
-            query += ' pogo_team_color=\'' + req.body[ 'pogo_team_color' ] + '\'';
+            if ( optionsLists.pogoTeamList().includes( req.body[ 'pogo_team_color' ] ) ) {
+                query += ' pogo_team_color=\'' + req.body[ 'pogo_team_color' ] + '\'';
+            }
         }
         if ( undefined !== req.body[ 'first_connection' ] ) {
             if ( req.body[ 'pogo_team_color' ] || req.body[ 'display_name' ] ) {
@@ -78,7 +82,7 @@ module.exports = {
                 res.send( err );
             } );
     },
-    'deleteAccount'                   : function ( req, res ) {
+    deleteAccount                   : function ( req, res ) {
         const pool = new Pool( pgConfig ),
             query = 'UPDATE trainers_network.trainers SET account_deleted= true;';
         pool.query( query )
@@ -89,16 +93,16 @@ module.exports = {
                 res.send( err );
             } );
     },
-    addFriendById                     : function ( req, res ) {
+    addFriendById                   : function ( req, res ) {
         // const pool = new Pool( pgConfig ),
         //     query = 'INSERT INTO trainers_network.friends (google_id,display_name,emails,user_profile_data) VALUES (\'' +
         //         profile.id + '\',\'' +
         //         profile.displayName + '\',\'' +
         //         profile.emails[ 0 ].value + '\',\' ' +
         //         JSON.stringify( profile ) + '\') RETURNING *;';
-        // return pool.query( query ).then( function ( data2 ) {
-        //     req.session[ 'first_connection' ] = data2.rows[ 0 ][ 'first_connection' ];
-        //     console.log( 'create new user with google_id :', data2.rows[ 0 ][ 'google_id' ], data2.rows[ 0 ][ 'display_name' ] );
+        // return pool.query( query ).then( function ( data) {
+        //     req.session[ 'first_connection' ] = data.rows[ 0 ][ 'first_connection' ];
+        //     console.log( 'create new user with google_id :', data.rows[ 0 ][ 'google_id' ], data.rows[ 0 ][ 'display_name' ] );
         // } );
     }
 };

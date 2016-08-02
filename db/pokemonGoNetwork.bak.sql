@@ -43,10 +43,11 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE friends (
+    id integer NOT NULL,
     id_from integer NOT NULL,
     id_to integer NOT NULL,
-    id integer NOT NULL,
-    accepted_at timestamp with time zone[]
+    is_accepted text DEFAULT 'pending'::text NOT NULL,
+    accepted_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -130,7 +131,8 @@ ALTER TABLE ONLY trainers ALTER COLUMN id SET DEFAULT nextval('trainers_id_seq':
 -- Data for Name: friends; Type: TABLE DATA; Schema: trainers_network; Owner: pkm_trainer
 --
 
-COPY friends (id_from, id_to, id, accepted_at) FROM stdin;
+COPY friends (id_from, id_to, id, is_accepted, accepted_at) FROM stdin;
+44	43	46	accepted	2014-06-01 14:00:00+02
 \.
 
 
@@ -138,7 +140,7 @@ COPY friends (id_from, id_to, id, accepted_at) FROM stdin;
 -- Name: friends_id_seq; Type: SEQUENCE SET; Schema: trainers_network; Owner: pkm_trainer
 --
 
-SELECT pg_catalog.setval('friends_id_seq', 1, false);
+SELECT pg_catalog.setval('friends_id_seq', 46, true);
 
 
 --
@@ -146,7 +148,8 @@ SELECT pg_catalog.setval('friends_id_seq', 1, false);
 --
 
 COPY trainers (id, google_id, display_name, emails, user_profile_data, account_deleted, pogo_team_color, first_connection) FROM stdin;
-15	116371735781381729561	benjamin winckell	winckell.benjamin.isart@gmail.com	 {"id":"116371735781381729561","displayName":"benjamin winckell","name":{"familyName":"winckell","givenName":"benjamin"},"emails":[{"value":"winckell.benjamin.isart@gmail.com","type":"account"}],"photos":[{"value":"https://lh6.googleusercontent.com/-7nnxy5dLr0k/AAAAAAAAAAI/AAAAAAAAAIY/y9taEnTVf3M/photo.jpg?sz=50"}],"gender":"male","provider":"google","_raw":"{\\n \\"kind\\": \\"plus#person\\",\\n \\"etag\\": \\"\\\\\\"xw0en60W6-NurXn4VBU-CMjSPEw/U4bUCC_bXIb3o3NT5X9pT3nwIQQ\\\\\\"\\",\\n \\"gender\\": \\"male\\",\\n \\"emails\\": [\\n  {\\n   \\"value\\": \\"winckell.benjamin.isart@gmail.com\\",\\n   \\"type\\": \\"account\\"\\n  }\\n ],\\n \\"objectType\\": \\"person\\",\\n \\"id\\": \\"116371735781381729561\\",\\n \\"displayName\\": \\"benjamin winckell\\",\\n \\"name\\": {\\n  \\"familyName\\": \\"winckell\\",\\n  \\"givenName\\": \\"benjamin\\"\\n },\\n \\"url\\": \\"https://plus.google.com/116371735781381729561\\",\\n \\"image\\": {\\n  \\"url\\": \\"https://lh6.googleusercontent.com/-7nnxy5dLr0k/AAAAAAAAAAI/AAAAAAAAAIY/y9taEnTVf3M/photo.jpg?sz=50\\",\\n  \\"isDefault\\": false\\n },\\n \\"isPlusUser\\": true,\\n \\"language\\": \\"fr\\",\\n \\"circledByCount\\": 25,\\n \\"verified\\": false\\n}\\n","_json":{"kind":"plus#person","etag":"\\"xw0en60W6-NurXn4VBU-CMjSPEw/U4bUCC_bXIb3o3NT5X9pT3nwIQQ\\"","gender":"male","emails":[{"value":"winckell.benjamin.isart@gmail.com","type":"account"}],"objectType":"person","id":"116371735781381729561","displayName":"benjamin winckell","name":{"familyName":"winckell","givenName":"benjamin"},"url":"https://plus.google.com/116371735781381729561","image":{"url":"https://lh6.googleusercontent.com/-7nnxy5dLr0k/AAAAAAAAAAI/AAAAAAAAAIY/y9taEnTVf3M/photo.jpg?sz=50","isDefault":false},"isPlusUser":true,"language":"fr","circledByCount":25,"verified":false}}	f	none	t
+43	116371735781381729561	benjamin winckell	winckell.benjamin.isart@gmail.com	 {"id":"116371735781381729561","displayName":"benjamin winckell","name":{"familyName":"winckell","givenName":"benjamin"},"emails":[{"value":"winckell.benjamin.isart@gmail.com","type":"account"}],"photos":[{"value":"https://lh6.googleusercontent.com/-7nnxy5dLr0k/AAAAAAAAAAI/AAAAAAAAAIY/y9taEnTVf3M/photo.jpg?sz=50"}],"gender":"male","provider":"google","_raw":"{\\n \\"kind\\": \\"plus#person\\",\\n \\"etag\\": \\"\\\\\\"xw0en60W6-NurXn4VBU-CMjSPEw/U4bUCC_bXIb3o3NT5X9pT3nwIQQ\\\\\\"\\",\\n \\"gender\\": \\"male\\",\\n \\"emails\\": [\\n  {\\n   \\"value\\": \\"winckell.benjamin.isart@gmail.com\\",\\n   \\"type\\": \\"account\\"\\n  }\\n ],\\n \\"objectType\\": \\"person\\",\\n \\"id\\": \\"116371735781381729561\\",\\n \\"displayName\\": \\"benjamin winckell\\",\\n \\"name\\": {\\n  \\"familyName\\": \\"winckell\\",\\n  \\"givenName\\": \\"benjamin\\"\\n },\\n \\"url\\": \\"https://plus.google.com/116371735781381729561\\",\\n \\"image\\": {\\n  \\"url\\": \\"https://lh6.googleusercontent.com/-7nnxy5dLr0k/AAAAAAAAAAI/AAAAAAAAAIY/y9taEnTVf3M/photo.jpg?sz=50\\",\\n  \\"isDefault\\": false\\n },\\n \\"isPlusUser\\": true,\\n \\"language\\": \\"fr\\",\\n \\"circledByCount\\": 25,\\n \\"verified\\": false\\n}\\n","_json":{"kind":"plus#person","etag":"\\"xw0en60W6-NurXn4VBU-CMjSPEw/U4bUCC_bXIb3o3NT5X9pT3nwIQQ\\"","gender":"male","emails":[{"value":"winckell.benjamin.isart@gmail.com","type":"account"}],"objectType":"person","id":"116371735781381729561","displayName":"benjamin winckell","name":{"familyName":"winckell","givenName":"benjamin"},"url":"https://plus.google.com/116371735781381729561","image":{"url":"https://lh6.googleusercontent.com/-7nnxy5dLr0k/AAAAAAAAAAI/AAAAAAAAAIY/y9taEnTVf3M/photo.jpg?sz=50","isDefault":false},"isPlusUser":true,"language":"fr","circledByCount":25,"verified":false}}	f	none	t
+44	114317970972352369339	Benjamin Winckell	b.winckell@student.isartdigital.com	 {"id":"114317970972352369339","displayName":"Benjamin Winckell","name":{"familyName":"Winckell","givenName":"Benjamin"},"emails":[{"value":"b.winckell@student.isartdigital.com","type":"account"}],"photos":[{"value":"https://lh3.googleusercontent.com/-6_GGNc_1PqY/AAAAAAAAAAI/AAAAAAAAAAA/WyTspoHnYzo/photo.jpg?sz=50"}],"gender":"male","provider":"google","_raw":"{\\n \\"kind\\": \\"plus#person\\",\\n \\"etag\\": \\"\\\\\\"xw0en60W6-NurXn4VBU-CMjSPEw/8eFG7koOQL7gXeQIqKEqRZSn7D8\\\\\\"\\",\\n \\"gender\\": \\"male\\",\\n \\"emails\\": [\\n  {\\n   \\"value\\": \\"b.winckell@student.isartdigital.com\\",\\n   \\"type\\": \\"account\\"\\n  }\\n ],\\n \\"objectType\\": \\"person\\",\\n \\"id\\": \\"114317970972352369339\\",\\n \\"displayName\\": \\"Benjamin Winckell\\",\\n \\"name\\": {\\n  \\"familyName\\": \\"Winckell\\",\\n  \\"givenName\\": \\"Benjamin\\"\\n },\\n \\"url\\": \\"https://plus.google.com/114317970972352369339\\",\\n \\"image\\": {\\n  \\"url\\": \\"https://lh3.googleusercontent.com/-6_GGNc_1PqY/AAAAAAAAAAI/AAAAAAAAAAA/WyTspoHnYzo/photo.jpg?sz=50\\",\\n  \\"isDefault\\": true\\n },\\n \\"organizations\\": [\\n  {\\n   \\"name\\": \\"Isart Digital\\",\\n   \\"type\\": \\"school\\",\\n   \\"primary\\": false\\n  },\\n  {\\n   \\"name\\": \\"procheo\\",\\n   \\"title\\": \\"dev Front/End\\",\\n   \\"type\\": \\"work\\",\\n   \\"primary\\": false\\n  }\\n ],\\n \\"isPlusUser\\": true,\\n \\"language\\": \\"fr\\",\\n \\"circledByCount\\": 9,\\n \\"verified\\": false,\\n \\"domain\\": \\"student.isartdigital.com\\"\\n}\\n","_json":{"kind":"plus#person","etag":"\\"xw0en60W6-NurXn4VBU-CMjSPEw/8eFG7koOQL7gXeQIqKEqRZSn7D8\\"","gender":"male","emails":[{"value":"b.winckell@student.isartdigital.com","type":"account"}],"objectType":"person","id":"114317970972352369339","displayName":"Benjamin Winckell","name":{"familyName":"Winckell","givenName":"Benjamin"},"url":"https://plus.google.com/114317970972352369339","image":{"url":"https://lh3.googleusercontent.com/-6_GGNc_1PqY/AAAAAAAAAAI/AAAAAAAAAAA/WyTspoHnYzo/photo.jpg?sz=50","isDefault":true},"organizations":[{"name":"Isart Digital","type":"school","primary":false},{"name":"procheo","title":"dev Front/End","type":"work","primary":false}],"isPlusUser":true,"language":"fr","circledByCount":9,"verified":false,"domain":"student.isartdigital.com"}}	f	none	t
 \.
 
 
@@ -154,7 +157,7 @@ COPY trainers (id, google_id, display_name, emails, user_profile_data, account_d
 -- Name: trainers_id_seq; Type: SEQUENCE SET; Schema: trainers_network; Owner: pkm_trainer
 --
 
-SELECT pg_catalog.setval('trainers_id_seq', 15, true);
+SELECT pg_catalog.setval('trainers_id_seq', 44, true);
 
 
 --
@@ -188,19 +191,19 @@ CREATE INDEX fki_foreign_key_to ON friends USING btree (id_to);
 
 
 --
--- Name: foreign_key_from; Type: FK CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer
+-- Name: from foreign; Type: FK CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer
 --
 
 ALTER TABLE ONLY friends
-    ADD CONSTRAINT foreign_key_from FOREIGN KEY (id_from) REFERENCES trainers(id);
+    ADD CONSTRAINT "from foreign" FOREIGN KEY (id_from) REFERENCES trainers(id);
 
 
 --
--- Name: foreign_key_to; Type: FK CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer
+-- Name: to foreign; Type: FK CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer
 --
 
 ALTER TABLE ONLY friends
-    ADD CONSTRAINT foreign_key_to FOREIGN KEY (id_to) REFERENCES trainers(id);
+    ADD CONSTRAINT "to foreign" FOREIGN KEY (id_to) REFERENCES trainers(id);
 
 
 --

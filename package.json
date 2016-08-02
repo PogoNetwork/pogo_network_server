@@ -9,9 +9,9 @@
   },
   "scripts": {
     "init_dev_project": "cd git-hooks-versionned/ && /bin/bash deployHooks.sh development &&  cd  ../ && npm i && psql -U postgres -h localhost -a -f db/initPokemonGoNetwork.database.sql",
-    "export_dump_db":"pg_dump -U postgres -h localhost pokemonGoNetwork -f ./db/pokemonGoNetwork.bak.sql",
-    "import_dump_db":"cat ./db/pokemonGoNetwork.bak.sql | psql -h localhost -U postgres pokemonGoNetwork",
-    "dev": "ENV_DEFINITION=development nodemon --watch app/ app/main.js",
+    "export_dump_db": "pg_dump -U postgres -h localhost pokemonGoNetwork -f ./db/pokemonGoNetwork.bak.sql",
+    "import_dump_db": "cat ./db/pokemonGoNetwork.bak.sql | psql -h localhost -U postgres pokemonGoNetwork",
+    "dev": "ENV_DEFINITION=development nodemon --harmony_array_includes --watch app/ app/main.js",
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "repository": {
@@ -29,6 +29,7 @@
     "cookie-parser": "^1.4.3",
     "express": "^4.14.0",
     "express-session": "^1.14.0",
+    "moment-timezone": "^0.5.5",
     "passport": "^0.3.2",
     "passport-google-oauth": "^1.0.0",
     "pg": "^6.0.3",

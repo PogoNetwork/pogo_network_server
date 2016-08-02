@@ -11,21 +11,25 @@ const googleStrategy = require( 'passport-google-oauth' ).OAuth2Strategy,
 function initPassportStrategy ( passport ) {
 // passport init google config
     passport.use( new googleStrategy( {
-        clientID    : privateGoogleData.web[ 'client_id' ],
-        clientSecret: privateGoogleData.web[ 'client_secret' ],
-        callbackURL : privateGoogleData.web[ 'redirect_uris' ][ 0 ],
-        passReqToCallback   : true
+        clientID         : privateGoogleData.web[ 'client_id' ],
+        clientSecret     : privateGoogleData.web[ 'client_secret' ],
+        callbackURL      : privateGoogleData.web[ 'redirect_uris' ][ 0 ],
+        passReqToCallback: true
     },
     function ( req, accessToken, refreshToken, profile, done ) {
-        // console.log( 'profile Google', profile );
         // here we save our user credentials like email etc...
-        manageTrainer.get_user( profile ).then( function ( data ) {
-            if ( 0 >= data.rows.length )
-            {
-                manageTrainer.create_user(req, profile );
+        manageTrainer.getUser( profile ).then( function ( data ) {
+            if ( 0 >= data.rows.length ) {
+                return manageTrainer.createUser( req, profile );
             }
+            else {
+                console.log( 'store current user to session' );
+                req.session.user = data.rows[ 0 ];
+                return ;
+            }
+        } ).then( function () {
+            return done( null, profile );
         } );
-        return done( null, profile );
     } )
     );
 
