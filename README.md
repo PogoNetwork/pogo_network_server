@@ -1,11 +1,11 @@
 # pokemon Go social network server
 
-##  How to install?
-
-```bash
-$ git clone <repository_url>
-$ npm run init_dev_project
-```
+### Table of Contents
+**[Requirements](#requirements)**
+**[How to install](#how-to-install)**
+**[Development](#development)**
+**[Create pokemonGoNetwork Db Dump](#create-pokemonGoNetwork-db-dump)**
+**[Deploy pokemonGoNetwork Db Dump](#deploy-pokemonGoNetwork-db-dump)**
 
 ## Requirements
 
@@ -13,8 +13,16 @@ Nodejs V5.8 and npm V3.7
 
 use [NVM](https://github.com/creationix/nvm) for check and use any of NodeJS version easely
 
-## Development
 
+## How to install
+
+```bash
+$ git clone <repository_url>
+$ npm run init_dev_project
+```
+
+## Development
+Start developping for the server or simply start it with this command:
 ```bash
 $ npm run dev // for start the current nodejs server
 ```
