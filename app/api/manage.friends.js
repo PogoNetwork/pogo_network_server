@@ -7,6 +7,7 @@ const pg = require( 'pg' ),
 module.exports = {
     initFriendsApi        : function initFriendApi ( app ) {
         const that = this;
+
         /**
          * @api {get} /friends/:status/:friendID Get friends list data or unique friend data by status
          * @apiName getFriendsData
@@ -21,10 +22,13 @@ module.exports = {
          *     curl -i http://localhost:3000/friends/accepted/2
          */
         app.get( '/friends/:status/:friendID?', that.getFriendsInfo );
+
         /**
          * @api {post} /friends/:id Create friend
          * @apiName addFriendById
          * @apiGroup Friends
+         *
+         * @apiParam {String} id Mandatory User id .
          *
          * @apiSuccess {Object} data Response object from create friend request.
          * @apiSuccess {String} data.message Information field.
@@ -32,20 +36,26 @@ module.exports = {
          *
          */
         app.post( '/friends/:id', that.addFriendById );
+
         /**
          * @api {put} /friends/:id Update friend status
          * @apiName updateFriendshipStatus
          * @apiGroup Friends
+         *
+         * @apiParam {String} id Mandatory User id .
          *
          * @apiSuccess {Object} data Current request status after update.
          *
          *
          */
         app.put( '/friends/:id', that.updateFriendshipStatus );
+
         /**
          * @api {delete} /friends/:id Delete accepted friend
          * @apiName removeFriendById
          * @apiGroup Friends
+         *
+         * @apiParam {String} id Mandatory User id .
          *
          */
         app.delete( '/friends/:id', that.removeFriendById );
