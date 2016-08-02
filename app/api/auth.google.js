@@ -13,7 +13,14 @@ module.exports = {
             failureRedirect: '/',
             successRedirect: '/profile'
         } ) );
-
+        /**
+         * @api {get} /auth/google Request oAuth2 Google login
+         * @apiName authGoogle
+         * @apiGroup auth
+         *
+         * @apiSuccess {Redirect} google redirection Redirect to google auth services and if login succeed we store the user info.
+         *
+         */
         app.get( '/auth/google',
             passport.authenticate( 'google', { scope: [ 'email', 'profile' ] } ) );
 

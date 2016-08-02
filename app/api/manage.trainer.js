@@ -7,6 +7,23 @@ const pg = require( 'pg' ),
 module.exports = {
     initUserApi                     : function initUserApi ( app, passportStrategy ) {
         const that = this;
+
+        /**
+         * @api {get} /trainer Get our current user data
+         * @apiName getTrainerData
+         * @apiGroup Trainer
+         *
+         * @apiSuccess {Object} data Response object from get trainer profile request.
+         * @apiSuccess {number} data.google_id Google id from oAuth2.
+         * @apiSuccess {number} data.id Current trainer Id.
+         * @apiSuccess {String} data.display_name Current trainer pseudo or name.
+         * @apiSuccess {String} data.emails Current trainer email.
+         * @apiSuccess {String} data.account_deleted Current trainer account status.
+         * @apiSuccess {String} data.pogo_team Current trainer account status.
+         * @apiSuccess {String} data.first_connection Current trainer first connection status.
+         * @apiSuccess {String} data.user_profile_data all google account data from user connection.
+         *
+         */
         app.get( '/trainer', function ( req, res ) {
             const pool = new Pool( pgConfig ),
                 query = 'SELECT * FROM trainers_network.trainers WHERE google_id=' + req.session.user.id + ';';
@@ -24,11 +41,31 @@ module.exports = {
                 } );
         } );
 
-        app.put( '/trainer/:id', that.editUserNameAndTeamAndConnection );
+        /**
+         * @api {put} /trainer/:id Edit our own trainer data
+         * @apiName putTrainerData
+         * @apiGroup Trainer
+         *
+         * @apiSuccess {Object} data Response object from get trainer profile request.
+         * @apiSuccess {number} data.google_id Google id from oAuth2.
+         * @apiSuccess {number} data.id Current trainer Id.
+         * @apiSuccess {String} data.display_name Current trainer pseudo or name.
+         * @apiSuccess {String} data.emails Current trainer email.
+         * @apiSuccess {String} data.account_deleted Current trainer account status.
+         * @apiSuccess {String} data.pogo_team Current trainer account status.
+         * @apiSuccess {String} data.first_connection Current trainer first connection status.
+         * @apiSuccess {String} data.user_profile_data all google account data from user connection.
+         *
+         */
+        app.put( '/trainer', that.editUserNameAndTeamAndConnection );
 
+        /**
+         * @api {delete} /trainer/:id Desactivate trainer account
+         * @apiName deleteTrainerData
+         * @apiGroup Trainer
+         *
+         */
         app.delete( '/trainer/:id', that.deleteAccount );
-
-        app.post( '/trainer/add/:id', that.addFriendById );
 
         return app;
     },
@@ -69,9 +106,10 @@ module.exports = {
             if ( req.body[ 'pogo_team_color' ] || req.body[ 'display_name' ] ) {
                 query += ',';
             }
-            query += ' first_connection=\'' + true + '\'';
+            query += ' first_connection=\'' + req.body[ 'first_connection' ] + '\'';
         }
-        query += ';';
+        query += ' WHERE id='+req.session.user.id+';';
+
 
         pool.query( query )
             .then( function ( data ) {
@@ -92,18 +130,6 @@ module.exports = {
                 console.log( err );
                 res.send( err );
             } );
-    },
-    addFriendById                   : function ( req, res ) {
-        // const pool = new Pool( pgConfig ),
-        //     query = 'INSERT INTO trainers_network.friends (google_id,display_name,emails,user_profile_data) VALUES (\'' +
-        //         profile.id + '\',\'' +
-        //         profile.displayName + '\',\'' +
-        //         profile.emails[ 0 ].value + '\',\' ' +
-        //         JSON.stringify( profile ) + '\') RETURNING *;';
-        // return pool.query( query ).then( function ( data) {
-        //     req.session[ 'first_connection' ] = data.rows[ 0 ][ 'first_connection' ];
-        //     console.log( 'create new user with google_id :', data.rows[ 0 ][ 'google_id' ], data.rows[ 0 ][ 'display_name' ] );
-        // } );
     }
 };
 
