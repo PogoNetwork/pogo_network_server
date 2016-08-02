@@ -1,11 +1,12 @@
 # pokemon Go social network server
 
 ### Table of Contents
-**[Requirements](#requirements)**
-**[How to install](#how-to-install)**
-**[Development](#development)**
-**[Create pokemonGoNetwork Db Dump](#create-pokemonGoNetwork-db-dump)**
-**[Deploy pokemonGoNetwork Db Dump](#deploy-pokemonGoNetwork-db-dump)**
+
+  **[Requirements](#requirements)**
+  **[How to install](#how-to-install)**
+  **[Development](#development)**
+  **[Create pokemonGoNetwork Db Dump](#create-pokemonGoNetwork-db-dump)**
+  **[Deploy pokemonGoNetwork Db Dump](#deploy-pokemonGoNetwork-db-dump)**
 
 ## Requirements
 
