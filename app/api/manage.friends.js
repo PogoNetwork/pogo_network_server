@@ -134,6 +134,32 @@ module.exports = {
         else {
             res.status( 403 ).send( ' Bad param is_accepted option given to the request' );
         }
+    },
+    removeFriendById      : function ( req, res ) {
+        const pool = new Pool( pgConfig ),
+            query = 'DELETE FROM trainers_network.friends WHERE ((id_from = ' +
+                req.session.user[ 'id' ] +
+                ' AND id_to= ' +
+                req.params.id +
+                ' ) OR (id_to = ' +
+                req.session.user[ 'id' ] +
+                ' AND id_from= ' + req.params.id +
+                ') ) AND ( is_accepted=\'' +
+                optionsLists.friendRequestStatusList()[ 1 ] + '\');';
+
+        pool.query( query )
+            .then( function ( data ) {
+                console.log( 'update friend request status' );
+                if ( 0 >= data.rowCount ) {
+                    res.status( 203 ).send( 'Friendship not found' );
+                }
+                else {
+                    res.status( 200 ).send( 'Friendship deleted' );
+                }
+            }, function ( err ) {
+                console.log( err );
+                res.send( err );
+            } );
     }
 };
 
