@@ -3,6 +3,7 @@
 ### Table of Contents
 **[Requirements](#requirements)**  
 **[How to install](#how-to-install)**  
+**[Api documentation](#api-documentation)**  
 **[Development](#development)**  
 **[Create pokemonGoNetwork Db Dump](#create-pokemongonetwork-db-dump)**  
 **[Deploy pokemonGoNetwork Db Dump](#deploy-pokemongonetwork-db-dump)**  
@@ -20,6 +21,11 @@ use [NVM](https://github.com/creationix/nvm) for check and use any of NodeJS ver
 $ git clone <repository_url>
 $ npm run init_dev_project
 ```
+## Api documentation
+
+after `npm run init_dev_project` runned, a new folder will appear at project root path, called apiDoc.
+
+if you want informations on availables url api open the `index.html` inside this folder
 
 ## Development
 Start developping for the server or simply start it with this command:
