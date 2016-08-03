@@ -75,6 +75,77 @@ ALTER SEQUENCE friends_id_seq OWNED BY friends.id;
 
 
 --
+-- Name: memberships; Type: TABLE; Schema: trainers_network; Owner: pkm_trainer; Tablespace: 
+--
+
+CREATE TABLE memberships (
+    id integer NOT NULL,
+    trainer_id integer NOT NULL,
+    team_id integer NOT NULL,
+    is_accepted boolean DEFAULT false NOT NULL,
+    membership_date timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE trainers_network.memberships OWNER TO pkm_trainer;
+
+--
+-- Name: memberships_id_seq; Type: SEQUENCE; Schema: trainers_network; Owner: pkm_trainer
+--
+
+CREATE SEQUENCE memberships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE trainers_network.memberships_id_seq OWNER TO pkm_trainer;
+
+--
+-- Name: memberships_id_seq; Type: SEQUENCE OWNED BY; Schema: trainers_network; Owner: pkm_trainer
+--
+
+ALTER SEQUENCE memberships_id_seq OWNED BY memberships.id;
+
+
+--
+-- Name: teams; Type: TABLE; Schema: trainers_network; Owner: pkm_trainer; Tablespace: 
+--
+
+CREATE TABLE teams (
+    id integer NOT NULL,
+    creation_date timestamp with time zone DEFAULT now() NOT NULL,
+    team_name text DEFAULT 'pikachu'::text NOT NULL,
+    owner_id integer NOT NULL
+);
+
+
+ALTER TABLE trainers_network.teams OWNER TO pkm_trainer;
+
+--
+-- Name: teams_id_seq; Type: SEQUENCE; Schema: trainers_network; Owner: pkm_trainer
+--
+
+CREATE SEQUENCE teams_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE trainers_network.teams_id_seq OWNER TO pkm_trainer;
+
+--
+-- Name: teams_id_seq; Type: SEQUENCE OWNED BY; Schema: trainers_network; Owner: pkm_trainer
+--
+
+ALTER SEQUENCE teams_id_seq OWNED BY teams.id;
+
+
+--
 -- Name: trainers; Type: TABLE; Schema: trainers_network; Owner: pkm_trainer; Tablespace: 
 --
 
@@ -124,6 +195,20 @@ ALTER TABLE ONLY friends ALTER COLUMN id SET DEFAULT nextval('friends_id_seq'::r
 -- Name: id; Type: DEFAULT; Schema: trainers_network; Owner: pkm_trainer
 --
 
+ALTER TABLE ONLY memberships ALTER COLUMN id SET DEFAULT nextval('memberships_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: trainers_network; Owner: pkm_trainer
+--
+
+ALTER TABLE ONLY teams ALTER COLUMN id SET DEFAULT nextval('teams_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: trainers_network; Owner: pkm_trainer
+--
+
 ALTER TABLE ONLY trainers ALTER COLUMN id SET DEFAULT nextval('trainers_id_seq'::regclass);
 
 
@@ -144,6 +229,36 @@ SELECT pg_catalog.setval('friends_id_seq', 48, true);
 
 
 --
+-- Data for Name: memberships; Type: TABLE DATA; Schema: trainers_network; Owner: pkm_trainer
+--
+
+COPY memberships (id, trainer_id, team_id, is_accepted, membership_date) FROM stdin;
+\.
+
+
+--
+-- Name: memberships_id_seq; Type: SEQUENCE SET; Schema: trainers_network; Owner: pkm_trainer
+--
+
+SELECT pg_catalog.setval('memberships_id_seq', 1, false);
+
+
+--
+-- Data for Name: teams; Type: TABLE DATA; Schema: trainers_network; Owner: pkm_trainer
+--
+
+COPY teams (id, creation_date, team_name, owner_id) FROM stdin;
+\.
+
+
+--
+-- Name: teams_id_seq; Type: SEQUENCE SET; Schema: trainers_network; Owner: pkm_trainer
+--
+
+SELECT pg_catalog.setval('teams_id_seq', 1, false);
+
+
+--
 -- Data for Name: trainers; Type: TABLE DATA; Schema: trainers_network; Owner: pkm_trainer
 --
 
@@ -158,6 +273,22 @@ COPY trainers (id, google_id, display_name, emails, user_profile_data, account_d
 --
 
 SELECT pg_catalog.setval('trainers_id_seq', 44, true);
+
+
+--
+-- Name: membership_prim; Type: CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer; Tablespace: 
+--
+
+ALTER TABLE ONLY memberships
+    ADD CONSTRAINT membership_prim PRIMARY KEY (id);
+
+
+--
+-- Name: prim; Type: CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer; Tablespace: 
+--
+
+ALTER TABLE ONLY teams
+    ADD CONSTRAINT prim PRIMARY KEY (id);
 
 
 --
@@ -191,6 +322,14 @@ CREATE INDEX fki_foreign_key_to ON friends USING btree (id_to);
 
 
 --
+-- Name: foreign_key; Type: FK CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer
+--
+
+ALTER TABLE ONLY teams
+    ADD CONSTRAINT foreign_key FOREIGN KEY (owner_id) REFERENCES trainers(id);
+
+
+--
 -- Name: from foreign; Type: FK CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer
 --
 
@@ -199,11 +338,27 @@ ALTER TABLE ONLY friends
 
 
 --
+-- Name: team_foreign_key; Type: FK CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer
+--
+
+ALTER TABLE ONLY memberships
+    ADD CONSTRAINT team_foreign_key FOREIGN KEY (team_id) REFERENCES teams(id);
+
+
+--
 -- Name: to foreign; Type: FK CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer
 --
 
 ALTER TABLE ONLY friends
     ADD CONSTRAINT "to foreign" FOREIGN KEY (id_to) REFERENCES trainers(id);
+
+
+--
+-- Name: trainer_foreign_key; Type: FK CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer
+--
+
+ALTER TABLE ONLY memberships
+    ADD CONSTRAINT trainer_foreign_key FOREIGN KEY (trainer_id) REFERENCES trainers(id);
 
 
 --
