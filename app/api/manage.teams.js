@@ -24,28 +24,10 @@ module.exports = {
         let query;
         if ( optionsLists.teamRequestStatusList().includes( req.params[ 'status' ] ) ) {
             if ( !req.params.teamID ) {
-                query = ' SELECT * FROM trainers_network.teams WHERE id=' +
-                    '(SELECT id_to AS team FROM trainers_network.teams WHERE id_from = ' +
-                    req.session.user[ 'id' ] +
-                    ' AND is_accepted=\'' +
-                    req.params[ 'status' ] +
-                    '\' UNION SELECT id_from AS team FROM trainers_network.teams WHERE id_to = ' +
-                    req.session.user[ 'id' ] + ' AND is_accepted=\'' +
-                    req.params[ 'status' ] + '\');';
+                query = ' SELECT * FROM trainers_network.teams WHERE id=(SELECT team_id FROM trainers_network.memberships WHERE id=' + req.session.user[ 'id' ] + ' AND is_accepted=true);';
             }
             else {
-                query = 'SELECT * FROM trainers_network.trainers WHERE id=' +
-                    '(SELECT id_to AS team FROM trainers_network.teams WHERE id_from = ' +
-                    req.session.user[ 'id' ] +
-                    ' AND id_to = ' +
-                    req.params.teamID +
-                    ' AND is_accepted=\'' +
-                    req.params[ 'status' ] +
-                    '\' UNION SELECT id_from AS team FROM trainers_network.teams WHERE id_to = ' +
-                    req.session.user[ 'id' ] +
-                    ' AND id_from = ' +
-                    req.params.teamID + ' AND is_accepted=\'' +
-                    req.params[ 'status' ] + '\' );';
+                query = ' SELECT * FROM trainers_network.teams WHERE id='+req.params.teamID+';';
             }
             pool.query( query )
                 .then( function ( data ) {
