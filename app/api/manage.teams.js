@@ -10,7 +10,7 @@ module.exports = {
 
         app.get( '/teams/:teamID?', that.getTeamsInfo );
 
-        app.post( '/teams', that.addTeamById );
+        app.post( '/teams/:teamName', that.createTeam );
 
         app.put( '/teams/:id', that.updateTeamshipStatus );
 
@@ -47,46 +47,30 @@ module.exports = {
             res.status( 203 ).send( 'missing url path team request status param ' + optionsLists.teamRequestStatusList() );
         }
     },
-    addTeamById         : function ( req, res ) {
+    createTeam          : function ( req, res ) {
         const pool = new Pool( pgConfig ),
-            queryGetTeam = 'SELECT * FROM trainers_network.teams WHERE id_from = ' +
-                req.session.user[ 'id' ] +
-                ' AND id_to= ' +
-                req.params.id +
-                ' UNION SELECT * FROM trainers_network.teams WHERE id_to = ' +
-                req.session.user[ 'id' ] +
-                ' AND id_from= ' + req.params.id + ';',
 
-            query = 'INSERT INTO trainers_network.teams (id_from,id_to) VALUES (\'' +
-                req.session.user[ 'id' ] + '\',\'' +
-                req.params.id + '\') RETURNING *;';
+            query = 'INSERT INTO trainers_network.teams (team_name,owner_id) VALUES (\'' +
+                req.params.teamName + '\',\'' +
+                req.session.user[ 'id' ] + '\') ON CONFLICT (team_name) DO RETURNING *;';
 
-        console.log( 'try create add team ' );
-        if ( req.session.user[ 'id' ] !== parseInt( req.params.id, 10 ) ) {
-            // console.log( 'try GetTeam', queryGetTeam );
-            // console.log( 'try query', query );
-            pool.query( queryGetTeam )
-                .then( function ( data ) {
-                    if ( 0 === data.rowCount ) {
-                        return pool.query( query );
-                    }
-                    else {
-                        return data;
-                    }
-                } )
+        console.log( 'try create new team ' );
+        if ( '/[^a-z0-9_.]/'.match( req.params.teamName ) ) {
+            pool.query( query )
                 .then( function ( data ) {
                     if ( 0 < data.rowCount ) {
                         res.status( 200 ).send( {
-                            message      : 'team request status',
-                            'is_accepted': data.rows[ 0 ][ 'is_accepted' ]
+                            message: 'team created ',
+                            data   : data.rows[ 0 ]
                         } );
                     }
                 }, function ( err ) {
+                    console.log( err );
                     res.status( 203 ).send( err );
                 } );
         }
         else {
-            res.status( 203 ).send( 'Don\'t try to add yourself' );
+            res.status( 203 ).send( 'name should contain only a-z and 0-9' );
         }
     },
     updateTeamshipStatus: function ( req, res ) {
