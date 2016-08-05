@@ -24,10 +24,10 @@ module.exports = {
         let query;
         if ( optionsLists.teamRequestStatusList().includes( req.params[ 'status' ] ) ) {
             if ( !req.params.teamID ) {
-                query = ' SELECT * FROM trainers_network.teams WHERE id=(SELECT team_id FROM trainers_network.memberships WHERE id=' + req.session.user[ 'id' ] + ' AND is_accepted=true);';
+                query = 'SELECT (t.id,t.team_name) FROM trainers_network.teams t LEFT JOIN trainers_network.memberships m ON (  t.id=m.team_id ) WHERE m.trainer_id=' + req.session.user[ 'id' ] + ' AND is_accepted=true;';
             }
             else {
-                query = ' SELECT * FROM trainers_network.teams WHERE id='+req.params.teamID+';';
+                query = 'SELECT (t.id,t.team_name) FROM trainers_network.teams t LEFT JOIN trainers_network.memberships m ON (  t.id=m.team_id ) WHERE m.trainer_id=' + req.session.user[ 'id' ] + ' AND is_accepted=true AND t.id=' + req.params.teamID + ';';
             }
             pool.query( query )
                 .then( function ( data ) {
