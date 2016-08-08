@@ -47,15 +47,15 @@ module.exports = {
             res.status( 203 ).send( 'missing url path team request status param ' + optionsLists.teamRequestStatusList() );
         }
     },
-    createTeam          : function ( req, res ) {
-        const pool = new Pool( pgConfig ),
-
-            query = 'INSERT INTO trainers_network.teams (team_name,owner_id) VALUES (\'' +
-                req.params.teamName + '\',\'' +
-                req.session.user[ 'id' ] + '\') ON CONFLICT (team_name) DO RETURNING *;';
-
+    createTeam    : function ( req, res ) {
+        'use strict';
+        const pool = new Pool( pgConfig );
+        let query;
         console.log( 'try create new team ' );
-        if ( '/[^a-z0-9_.]/'.match( req.params.teamName ) ) {
+        if ( null !== req.params.teamName.trim().match( /^[a-z0-9 ]*$/ ) ) {
+            query = 'INSERT INTO trainers_network.teams (team_name,owner_id) VALUES (\`' +
+                req.params.teamName + '\`,' +
+                req.session.user[ 'id' ] + ' ) ON CONFLICT (team_name) DO NOTHING RETURNING *;';
             pool.query( query )
                 .then( function ( data ) {
                     if ( 0 < data.rowCount ) {
@@ -64,16 +64,22 @@ module.exports = {
                             data   : data.rows[ 0 ]
                         } );
                     }
+                    else {
+                        res.status( 203 ).send( {
+                            message: 'team_name already used'
+                        } );
+                    }
+
                 }, function ( err ) {
                     console.log( err );
                     res.status( 203 ).send( err );
                 } );
         }
         else {
-            res.status( 203 ).send( 'name should contain only a-z and 0-9' );
+            res.status( 203 ).send( 'name should contain only a-z and 0-9 and spaces' );
         }
     },
-    updateTeamshipStatus: function ( req, res ) {
+    updateTeamData: function ( req, res ) {
         const pool = new Pool( pgConfig ),
             query = 'UPDATE trainers_network.teams SET is_accepted= \'' +
                 req.body[ 'is_accepted' ] +
@@ -105,7 +111,7 @@ module.exports = {
             res.status( 403 ).send( ' Bad param is_accepted option given to the request' );
         }
     },
-    removeTeamById      : function ( req, res ) {
+    removeTeamById: function ( req, res ) {
         const pool = new Pool( pgConfig ),
             query = 'DELETE FROM trainers_network.teams WHERE ((id_from = ' +
                 req.session.user[ 'id' ] +
