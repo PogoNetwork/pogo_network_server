@@ -6,15 +6,15 @@ const pg = require( 'pg' ),
 
 module.exports = {
     initTeamsApi        : function initTeamApi ( app ) {
-        const that = this;
+        this;
 
-        app.get( '/teams/:teamID?', that.getTeamsInfo );
+        app.get( '/teams/:teamID?', this.getTeamsInfo );
 
-        app.post( '/teams/:teamName', that.createTeam );
+        app.post( '/teams/:teamName', this.createTeam );
 
-        app.put( '/teams/:id', that.updateTeamshipStatus );
+        app.put( '/teams/:id', this.updateTeamData);
 
-        app.delete( '/teams/:id', that.removeTeamById );
+        app.delete( '/teams/:id', this.removeTeamById );
 
         return app;
     },

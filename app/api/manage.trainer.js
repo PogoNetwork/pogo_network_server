@@ -6,8 +6,6 @@ const pg = require( 'pg' ),
 
 module.exports = {
     initUserApi                     : function initUserApi ( app, passportStrategy ) {
-        const that = this;
-
         /**
          * @api {get} /trainer Get our current user data
          * @apiName getTrainerData
@@ -57,7 +55,7 @@ module.exports = {
          * @apiSuccess {String} data.user_profile_data all google account data from user connection.
          *
          */
-        app.put( '/trainer', that.editUserNameAndTeamAndConnection );
+        app.put( '/trainer', this.editUserNameAndTeamAndConnection );
 
         /**
          * @api {delete} /trainer/:id Desactivate trainer account
@@ -65,7 +63,7 @@ module.exports = {
          * @apiGroup Trainer
          *
          */
-        app.delete( '/trainer/:id', that.deleteAccount );
+        app.delete( '/trainer/:id', this.deleteAccount );
 
         return app;
     },
