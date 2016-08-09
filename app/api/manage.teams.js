@@ -5,57 +5,52 @@ const pg = require( 'pg' ),
     Pool = require( 'pg-pool' );
 
 module.exports = {
-    initTeamsApi        : function initTeamApi ( app ) {
+    initTeamsApi  : function initTeamApi ( app ) {
         this;
 
         app.get( '/teams/:teamID?', this.getTeamsInfo );
 
         app.post( '/teams/:teamName', this.createTeam );
 
-        app.put( '/teams/:id', this.updateTeamData);
+        app.put( '/teams/:id', this.updateTeamData );
 
         app.delete( '/teams/:id', this.removeTeamById );
 
         return app;
     },
-    getTeamsInfo        : function ( req, res ) {
+    getTeamsInfo  : function ( req, res ) {
         'use strict';
         const pool = new Pool( pgConfig );
         let query;
-        if ( optionsLists.teamRequestStatusList().includes( req.params[ 'status' ] ) ) {
-            if ( !req.params.teamID ) {
-                query = 'SELECT (t.id,t.team_name) FROM trainers_network.teams t LEFT JOIN trainers_network.memberships m ON (  t.id=m.team_id ) WHERE m.trainer_id=' + req.session.user[ 'id' ] + ' AND is_accepted=true;';
-            }
-            else {
-                query = 'SELECT (t.id,t.team_name) FROM trainers_network.teams t LEFT JOIN trainers_network.memberships m ON (  t.id=m.team_id ) WHERE m.trainer_id=' + req.session.user[ 'id' ] + ' AND is_accepted=true AND t.id=' + req.params.teamID + ';';
-            }
-            pool.query( query )
-                .then( function ( data ) {
-                    console.log( 'get teams', query );
-                    if ( 0 >= data.rowCount ) {
-                        res.status( 204 ).send();
-                    }
-                    else {
-                        res.send( data.rows );
-                    }
-                }, function ( err ) {
-                    console.log( err );
-                    res.send( err );
-                } );
+        if ( !req.params.teamID ) {
+            query = 'SELECT (t.id,t.team_name) FROM trainers_network.teams t LEFT JOIN trainers_network.memberships m ON (  t.id=m.team_id ) WHERE m.trainer_id=' + req.session.user[ 'id' ] + ' AND is_accepted=true;';
         }
         else {
-            res.status( 203 ).send( 'missing url path team request status param ' + optionsLists.teamRequestStatusList() );
+            query = 'SELECT (t.id,t.team_name) FROM trainers_network.teams t LEFT JOIN trainers_network.memberships m ON (  t.id=m.team_id ) WHERE m.trainer_id=' + req.session.user[ 'id' ] + ' AND is_accepted=true AND t.id=' + req.params.teamID + ';';
         }
+        pool.query( query )
+            .then( function ( data ) {
+                console.log( 'get teams', query );
+                if ( 0 >= data.rowCount ) {
+                    res.status( 204 ).send();
+                }
+                else {
+                    res.send( data.rows );
+                }
+            }, function ( err ) {
+                console.log( err );
+                res.send( err );
+            } );
     },
     createTeam    : function ( req, res ) {
         'use strict';
         const pool = new Pool( pgConfig );
         let query;
         console.log( 'try create new team ' );
-        if ( null !== req.params.teamName.trim().match( /^[a-z0-9 ]*$/ ) ) {
-            query = 'INSERT INTO trainers_network.teams (team_name,owner_id) VALUES (\`' +
-                req.params.teamName + '\`,' +
-                req.session.user[ 'id' ] + ' ) ON CONFLICT (team_name) DO NOTHING RETURNING *;';
+        if ( null !== req.params.teamName.trim().toLowerCase().match( /^[a-z0-9 ]*$/ ) ) {
+            query = 'INSERT INTO trainers_network.teams (team_name,owner_id) VALUES (\'' +
+                req.params.teamName.trim().toLowerCase() + '\',' +
+                req.session.user[ 'id' ]+' ) ON CONFLICT (team_name) DO NOTHING RETURNING *;';
             pool.query( query )
                 .then( function ( data ) {
                     if ( 0 < data.rowCount ) {
@@ -66,12 +61,11 @@ module.exports = {
                     }
                     else {
                         res.status( 203 ).send( {
-                            message: 'team_name already used'
+                            message: 'team name already used'
                         } );
                     }
 
                 }, function ( err ) {
-                    console.log( err );
                     res.status( 203 ).send( err );
                 } );
         }
