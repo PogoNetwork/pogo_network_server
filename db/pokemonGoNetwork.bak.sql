@@ -2,12 +2,16 @@
 -- PostgreSQL database dump
 --
 
+-- Dumped from database version 9.5.3
+-- Dumped by pg_dump version 9.5.3
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
+SET row_security = off;
 
 --
 -- Name: trainers_network; Type: SCHEMA; Schema: -; Owner: pkm_trainer
@@ -39,7 +43,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: friends; Type: TABLE; Schema: trainers_network; Owner: pkm_trainer; Tablespace: 
+-- Name: friends; Type: TABLE; Schema: trainers_network; Owner: pkm_trainer
 --
 
 CREATE TABLE friends (
@@ -51,7 +55,7 @@ CREATE TABLE friends (
 );
 
 
-ALTER TABLE trainers_network.friends OWNER TO pkm_trainer;
+ALTER TABLE friends OWNER TO pkm_trainer;
 
 --
 -- Name: friends_id_seq; Type: SEQUENCE; Schema: trainers_network; Owner: pkm_trainer
@@ -65,7 +69,7 @@ CREATE SEQUENCE friends_id_seq
     CACHE 1;
 
 
-ALTER TABLE trainers_network.friends_id_seq OWNER TO pkm_trainer;
+ALTER TABLE friends_id_seq OWNER TO pkm_trainer;
 
 --
 -- Name: friends_id_seq; Type: SEQUENCE OWNED BY; Schema: trainers_network; Owner: pkm_trainer
@@ -75,7 +79,7 @@ ALTER SEQUENCE friends_id_seq OWNED BY friends.id;
 
 
 --
--- Name: memberships; Type: TABLE; Schema: trainers_network; Owner: pkm_trainer; Tablespace: 
+-- Name: memberships; Type: TABLE; Schema: trainers_network; Owner: pkm_trainer
 --
 
 CREATE TABLE memberships (
@@ -87,7 +91,7 @@ CREATE TABLE memberships (
 );
 
 
-ALTER TABLE trainers_network.memberships OWNER TO pkm_trainer;
+ALTER TABLE memberships OWNER TO pkm_trainer;
 
 --
 -- Name: memberships_id_seq; Type: SEQUENCE; Schema: trainers_network; Owner: pkm_trainer
@@ -101,7 +105,7 @@ CREATE SEQUENCE memberships_id_seq
     CACHE 1;
 
 
-ALTER TABLE trainers_network.memberships_id_seq OWNER TO pkm_trainer;
+ALTER TABLE memberships_id_seq OWNER TO pkm_trainer;
 
 --
 -- Name: memberships_id_seq; Type: SEQUENCE OWNED BY; Schema: trainers_network; Owner: pkm_trainer
@@ -111,7 +115,7 @@ ALTER SEQUENCE memberships_id_seq OWNED BY memberships.id;
 
 
 --
--- Name: teams; Type: TABLE; Schema: trainers_network; Owner: pkm_trainer; Tablespace: 
+-- Name: teams; Type: TABLE; Schema: trainers_network; Owner: pkm_trainer
 --
 
 CREATE TABLE teams (
@@ -122,7 +126,7 @@ CREATE TABLE teams (
 );
 
 
-ALTER TABLE trainers_network.teams OWNER TO pkm_trainer;
+ALTER TABLE teams OWNER TO pkm_trainer;
 
 --
 -- Name: teams_id_seq; Type: SEQUENCE; Schema: trainers_network; Owner: pkm_trainer
@@ -136,7 +140,7 @@ CREATE SEQUENCE teams_id_seq
     CACHE 1;
 
 
-ALTER TABLE trainers_network.teams_id_seq OWNER TO pkm_trainer;
+ALTER TABLE teams_id_seq OWNER TO pkm_trainer;
 
 --
 -- Name: teams_id_seq; Type: SEQUENCE OWNED BY; Schema: trainers_network; Owner: pkm_trainer
@@ -146,7 +150,7 @@ ALTER SEQUENCE teams_id_seq OWNED BY teams.id;
 
 
 --
--- Name: trainers; Type: TABLE; Schema: trainers_network; Owner: pkm_trainer; Tablespace: 
+-- Name: trainers; Type: TABLE; Schema: trainers_network; Owner: pkm_trainer
 --
 
 CREATE TABLE trainers (
@@ -161,7 +165,7 @@ CREATE TABLE trainers (
 );
 
 
-ALTER TABLE trainers_network.trainers OWNER TO pkm_trainer;
+ALTER TABLE trainers OWNER TO pkm_trainer;
 
 --
 -- Name: trainers_id_seq; Type: SEQUENCE; Schema: trainers_network; Owner: pkm_trainer
@@ -175,7 +179,7 @@ CREATE SEQUENCE trainers_id_seq
     CACHE 1;
 
 
-ALTER TABLE trainers_network.trainers_id_seq OWNER TO pkm_trainer;
+ALTER TABLE trainers_id_seq OWNER TO pkm_trainer;
 
 --
 -- Name: trainers_id_seq; Type: SEQUENCE OWNED BY; Schema: trainers_network; Owner: pkm_trainer
@@ -240,7 +244,7 @@ COPY memberships (id, trainer_id, team_id, is_accepted, membership_date) FROM st
 -- Name: memberships_id_seq; Type: SEQUENCE SET; Schema: trainers_network; Owner: pkm_trainer
 --
 
-SELECT pg_catalog.setval('memberships_id_seq', 1, false);
+SELECT pg_catalog.setval('memberships_id_seq', 3, true);
 
 
 --
@@ -248,6 +252,13 @@ SELECT pg_catalog.setval('memberships_id_seq', 1, false);
 --
 
 COPY teams (id, creation_date, team_name, owner_id) FROM stdin;
+8	2016-08-05 21:53:03.755631+02	benben	43
+12	2016-08-05 21:59:22.663198+02	pouet	44
+20	2016-08-08 21:17:07.92204+02	benbenen	43
+47	2016-08-08 22:23:10.648877+02	pouetzazaz	43
+50	2016-08-08 22:33:45.665267+02	pouetzazaz azdazdazd	44
+51	2016-08-08 22:34:00.437551+02	pouetzazaz azdazdazd z   zefzefzf  zefzef	44
+52	2016-08-08 22:34:15.528704+02	pouetzazaz azdaZdazd z   zefzefzf  zefzef	44
 \.
 
 
@@ -255,7 +266,7 @@ COPY teams (id, creation_date, team_name, owner_id) FROM stdin;
 -- Name: teams_id_seq; Type: SEQUENCE SET; Schema: trainers_network; Owner: pkm_trainer
 --
 
-SELECT pg_catalog.setval('teams_id_seq', 1, false);
+SELECT pg_catalog.setval('teams_id_seq', 53, true);
 
 
 --
@@ -276,7 +287,7 @@ SELECT pg_catalog.setval('trainers_id_seq', 44, true);
 
 
 --
--- Name: membership_prim; Type: CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer; Tablespace: 
+-- Name: membership_prim; Type: CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer
 --
 
 ALTER TABLE ONLY memberships
@@ -284,7 +295,7 @@ ALTER TABLE ONLY memberships
 
 
 --
--- Name: prim; Type: CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer; Tablespace: 
+-- Name: prim; Type: CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer
 --
 
 ALTER TABLE ONLY teams
@@ -292,7 +303,7 @@ ALTER TABLE ONLY teams
 
 
 --
--- Name: prim_key; Type: CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer; Tablespace: 
+-- Name: prim_key; Type: CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer
 --
 
 ALTER TABLE ONLY friends
@@ -300,7 +311,7 @@ ALTER TABLE ONLY friends
 
 
 --
--- Name: primary key; Type: CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer; Tablespace: 
+-- Name: primary key; Type: CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer
 --
 
 ALTER TABLE ONLY trainers
@@ -308,14 +319,22 @@ ALTER TABLE ONLY trainers
 
 
 --
--- Name: fki_foreign_key_from; Type: INDEX; Schema: trainers_network; Owner: pkm_trainer; Tablespace: 
+-- Name: team_name; Type: CONSTRAINT; Schema: trainers_network; Owner: pkm_trainer
+--
+
+ALTER TABLE ONLY teams
+    ADD CONSTRAINT team_name UNIQUE (team_name);
+
+
+--
+-- Name: fki_foreign_key_from; Type: INDEX; Schema: trainers_network; Owner: pkm_trainer
 --
 
 CREATE INDEX fki_foreign_key_from ON friends USING btree (id_from);
 
 
 --
--- Name: fki_foreign_key_to; Type: INDEX; Schema: trainers_network; Owner: pkm_trainer; Tablespace: 
+-- Name: fki_foreign_key_to; Type: INDEX; Schema: trainers_network; Owner: pkm_trainer
 --
 
 CREATE INDEX fki_foreign_key_to ON friends USING btree (id_to);
